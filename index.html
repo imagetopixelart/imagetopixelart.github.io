@@ -8,20 +8,13 @@
           content="Free online image to pixel art converter. Upload your image and easily convert it to pixel art with adjustable pixel size, color palettes, and more.">
     <meta name="keywords"
           content="image to pixel art, pixel art converter, online pixel art maker, photo to pixel, image pixelator, free pixel art tool, retro art, 8-bit art, 16-bit art">
-    <meta name="author" content="Your Name/Website Name (optional, but good for branding)">
+    <meta name="author" content="Akhil A S (akhilasdeveloper@gmail.com)">
     <meta property="og:title" content="Image to Pixel Art Converter Online - Free Tool">
     <meta property="og:description"
           content="Free online image to pixel art converter. Upload your image and easily convert it to pixel art with adjustable pixel size, color palettes, and more.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="[YOUR_WEBSITE_URL_HERE]">
-    <meta property="og:image" content="[URL_TO_A_SAMPLE_PIXEL_ART_IMAGE_HERE]">
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:title" content="Image to Pixel Art Converter Online - Free Tool">
-    <meta property="twitter:description"
-          content="Free online image to pixel art converter. Upload your image and easily convert it to pixel art with adjustable pixel size, color palettes, and more.">
-    <meta property="twitter:url" content="[YOUR_WEBSITE_URL_HERE]">
-    <meta property="twitter:image" content="[URL_TO_A_SAMPLE_PIXEL_ART_IMAGE_HERE]">
-    <link rel="canonical" href="[YOUR_WEBSITE_URL_HERE]">
+    <meta property="og:url" content="https://imagetopixelart.github.io/">
+    <link rel="canonical" href="https://imagetopixelart.github.io/">
     <style>
         body {
             font-family: Georgia, Times, serif;
@@ -40,7 +33,6 @@
             border-radius: 0.25em;
         }
 
-        /* More specific and SEO-friendly heading tags */
         h1 {
             font-family: 'Inter', sans-serif;
             font-size: 1.8em;
@@ -186,7 +178,7 @@
 
         .form-control input[type="number"]:focus,
         .form-control select:focus {
-            border-color: #36c;
+            border-color: #004fa0;
             box-shadow: 0 0 0 0.2em rgba(51, 102, 204, 0.25);
         }
 
@@ -313,7 +305,6 @@
             margin-bottom: 1em;
         }
 
-        /* More descriptive heading */
         #output {
             font-size: 1.2em;
             color: #202122;
@@ -341,13 +332,13 @@
             align-items: center;
             justify-content: center;
             padding: 0.5em 1em;
-            background-color: #3366cc;
+            background-color: #004fa0;
             color: white;
             border-radius: 0.2em;
             cursor: pointer;
             transition: background-color 0.15s ease-in-out;
             text-decoration: none;
-            border: 1px solid #2e5cb8;
+            border: 1px solid #004fa0;
             font-size: 0.9em;
         }
 
@@ -365,7 +356,7 @@
         }
 
         a {
-            color: #0645ad;
+            color: #004fa0;
             text-decoration: none;
         }
 
@@ -385,11 +376,54 @@
             cursor: help;
         }
 
-        /* Add a class for important keywords */
         .keyword {
             font-weight: bold;
-            color: #007bff; /* Example color */
+            color: #004fa0;
         }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 5px;
+            background: #e0e0e0;
+            outline: none;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #3366cc;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: none;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #3366cc;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover,
+        input[type="range"]::-moz-range-thumb:hover {
+            background: #2a4d8f;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:active,
+        input[type="range"]::-moz-range-thumb:active {
+            background: #1e335e;
+        }
+
     </style>
 </head>
 <body>
@@ -437,7 +471,7 @@
                     <label id="algorithm-label" class="hidden" for="algorithm">Algorithm:
                         <a href="#algorithm-help" title="Learn more about pixel art generation algorithms">
                             <svg class="info-icon" viewBox="0 0 24 24">
-                                <path fill="#1155ee"
+                                <path fill="#004fa0"
                                       d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-6h2v6zm-1-8c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/>
                             </svg>
                         </a>
@@ -453,7 +487,7 @@
                 <label for="colorPalette">Color palette:
                     <a href="#palette-help" title="Explore different color palettes for your pixel art">
                         <svg class="info-icon" viewBox="0 0 24 24">
-                            <path fill="#1155ee"
+                            <path fill="#004fa0"
                                   d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-6h2v6zm-1-8c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/>
                         </svg>
                     </a>
@@ -492,7 +526,7 @@
                             <label for="methodSelect">Generate palette:
                                 <a href="#generate-palette-help" title="Generate a color palette from your image">
                                     <svg class="info-icon" viewBox="0 0 24 24">
-                                        <path fill="#1155ee"
+                                        <path fill="#004fa0"
                                               d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-6h2v6zm-1-8c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/>
                                     </svg>
                                 </a>
