@@ -441,6 +441,14 @@
             font-size: .8em;
             margin-top: .3em
         }
+
+        input[type=range] {
+            pointer-events: none;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            pointer-events: auto;
+        }
     </style>
 </head>
 <body>
