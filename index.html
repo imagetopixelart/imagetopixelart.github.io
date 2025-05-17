@@ -14,11 +14,12 @@
           content="Free online image to pixel art converter. Upload your image and easily convert it to pixel art with adjustable pixel size, color palettes, and more.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://imagetopixelart.github.io/">
-<meta name="google-adsense-account" content="ca-pub-5092916795453392">
     <link rel="canonical" href="https://imagetopixelart.github.io/">
 
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5092916795453392"
-     crossorigin="anonymous"></script>
+    <meta name="google-adsense-account" content="ca-pub-5092916795453392">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5092916795453392"
+            crossorigin="anonymous"></script>
+
     <style>
         body {
             font-family: Georgia, Times, serif;
@@ -38,7 +39,6 @@
         }
 
         h1 {
-            font-family: 'Inter', sans-serif;
             font-size: 1.8em;
             color: #202122;
             border-bottom: 1px solid #a2a9b1;
@@ -47,7 +47,6 @@
         }
 
         h2 {
-            font-family: 'Inter', sans-serif;
             font-size: 1.3em;
             color: #202122;
             margin-top: 1em;
@@ -95,6 +94,7 @@
             grid-template-columns: repeat(1, minmax(0, 1fr));
             gap: 0.8em;
             margin-top: 0.8em;
+            margin-bottom: 1em;
         }
 
         @media (min-width: 768px) {
@@ -270,6 +270,7 @@
 
         .convert-button-container {
             margin-bottom: 0.8em;
+            margin-top: 2em;
             text-align: center;
         }
 
@@ -428,6 +429,18 @@
             background: #1e335e;
         }
 
+        #error-status{
+            color: red;
+            background: #eee;
+            padding: 10px;
+            border: 1px solid;
+        }
+
+        #custom-error-status{
+            color: red;
+            font-size: .8em;
+            margin-top: .3em
+        }
     </style>
 </head>
 <body>
@@ -444,6 +457,7 @@
             <input id="imageUpload" type="file" accept="image/*" style="display: none;"/>
         </label>
         <p id="file-name" class="file-name"></p>
+        <p id="error-status" hidden></p>
         <div class="canvas-container">
             <canvas id="originalCanvas" class=""></canvas>
         </div>
@@ -471,8 +485,8 @@
                     <label for="pixelSize">Pixel size:</label>
                     <input type="number" id="pixelSize" value="10" min="2" max="100" class=""/>
                 </div>
-                <div class="form-control">
-                    <label id="algorithm-label" class="hidden" for="algorithm">Algorithm:
+                <div class="form-control hidden" id="algorithmContainer">
+                    <label id="algorithm-label" for="algorithm">Algorithm:
                         <a href="#algorithm-help" title="Learn more about pixel art generation algorithms">
                             <svg class="info-icon" viewBox="0 0 24 24">
                                 <path fill="#004fa0"
@@ -480,7 +494,7 @@
                             </svg>
                         </a>
                     </label>
-                    <select id="algorithm" class="hidden">
+                    <select id="algorithm">
                         <option value="ciede2000">True color (CIEDE2000)</option>
                         <option value="luminance">Luminance distance</option>
                         <option value="euclidean">RGB Distance (Euclidean distance)</option>
@@ -551,7 +565,11 @@
                         </div>
                     </div>
                 </div>
-                <button id="savePaletteBtn" hidden>Save Palette</button>
+                <div id="savePaletteContainer" hidden>
+                    <label for="savePaletteName">Save custom palette:</label><input id="savePaletteName">
+                    <button id="savePaletteBtn">Save</button>
+                    <div id="custom-error-status"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -688,6 +706,7 @@
     const savePaletteBtn = document.getElementById('savePaletteBtn');
     const generatePaletteBtn = document.getElementById('generate-palette');
     const algorithmSelect = document.getElementById('algorithm');
+    const errorStatus = document.getElementById('error-status');
     let img = new Image();
     let originalImage = null;
     let selectedPalette = [];
@@ -925,6 +944,8 @@
             document.getElementById("contrast").value = 100;
             document.getElementById("saturation").value = 100;
             document.getElementById("file-name").textContent = e.target.files[0].name;
+
+            hideImageNotUploaded()
         } catch (e) {
             showImageNotUploaded();
         }
@@ -940,8 +961,9 @@
     }
 
     function addNamedPalette() {
-        const paletteName = prompt("Enter a name for your palette:");
-        if (paletteName && !customPalettes[paletteName]) {
+        document.getElementById('custom-error-status').hidden = true;
+        const paletteName = document.getElementById("savePaletteName").value;
+        if (paletteName !== '' && !customPalettes[paletteName]) {
             customPalettes[paletteName] = [...selectedPalette.map(c => [...c])]; // Deep copy
             updateStoredPalettesDropdown();
             saveCustomPalettes();
@@ -949,18 +971,17 @@
             paletteSelect.selectedIndex = paletteSelect.length - 1;
             paletteSelect.dispatchEvent(new Event('change'));
 
-        } else if (paletteName) {
-            alert("Palette name already exists or is empty.");
+        } else {
+            document.getElementById('custom-error-status').hidden = false;
+            document.getElementById('custom-error-status').innerHTML = "Palette name already exists or is empty.";
         }
     }
 
     function deleteNamedPalette(paletteName) {
-        if (confirm(`Delete palette "${paletteName}"?`)) {
-            delete customPalettes[paletteName];
-            updateStoredPalettesDropdown();
-            saveCustomPalettes();
-            paletteSelect.dispatchEvent(new Event("change"));
-        }
+        delete customPalettes[paletteName];
+        updateStoredPalettesDropdown();
+        saveCustomPalettes();
+        paletteSelect.dispatchEvent(new Event("change"));
     }
 
     function updateStoredPalettesDropdown() {
@@ -985,13 +1006,11 @@
     paletteSelect.addEventListener('change', function () {
 
         deleteCurrentPalette.hidden = true;
-        algorithmSelect.classList.remove('hidden');
-        document.getElementById('algorithm-label').classList.remove('hidden');
+        document.getElementById('algorithmContainer').classList.remove('hidden');
         const selectedName = paletteSelect.value;
 
         if (selectedName === 'original') {
-            algorithmSelect.classList.add('hidden');
-            document.getElementById('algorithm-label').classList.add('hidden');
+            document.getElementById('algorithmContainer').classList.add('hidden');
         }
 
         if (selectedName === 'custom') {
@@ -1025,7 +1044,7 @@
 
     function updateCustomPalette() {
         // Add save button if custom palette has colors
-        savePaletteBtn.hidden = !(selectedPalette.length > 0 && paletteSelect.value === 'custom');
+        document.getElementById('savePaletteContainer').hidden = !(selectedPalette.length > 0 && paletteSelect.value === 'custom');
     }
 
     updateStoredPalettesDropdown();
@@ -1036,7 +1055,14 @@
     });
 
     function showImageNotUploaded() {
-        alert("Please upload a valid image.");
+        errorStatus.hidden = false;
+        errorStatus.innerHTML = "Please upload a valid image.";
+        errorStatus.scrollIntoView(false);
+    }
+
+    function hideImageNotUploaded() {
+        errorStatus.hidden = true;
+        document.getElementById('custom-error-status').hidden = true;
     }
 
     function hexToRgb(hex) {
@@ -1217,6 +1243,9 @@
             showImageNotUploaded()
             return;
         }
+
+        hideImageNotUploaded()
+
         try {
             disableApplyButton();
 
@@ -1264,6 +1293,8 @@
             }
 
             await processRows(0);
+
+            hideImageNotUploaded()
 
         } catch (e) {
             showImageNotUploaded();
@@ -1325,6 +1356,7 @@
             selectedPalette = generatePalette()
             updateCustomPalette();
             updatePalettePreview();
+            hideImageNotUploaded()
         } catch (e) {
             showImageNotUploaded();
         }
