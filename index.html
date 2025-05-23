@@ -1,12 +1,1491 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<title></title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Image to Pixel Art Converter Online - Free Tool</title>
+    <link rel="canonical" href="https://imagetopixelart.github.io/">
+
+    <meta name="google-adsense-account" content="ca-pub-5092916795453392">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5092916795453392"
+            crossorigin="anonymous"></script>
+
+    <style>
+        body {
+            font-family: Georgia, Times, serif;
+            background-color: #f8f9fa;
+            color: #202122;
+            padding: 1em;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background-color: #fff;
+            border: 1px solid #a2a9b1;
+            padding: 1em 2em;
+            border-radius: 0.25em;
+        }
+
+        h1 {
+            font-size: 1.8em;
+            color: #202122;
+            border-bottom: 1px solid #a2a9b1;
+            padding-bottom: 0.3em;
+            margin-bottom: 0.5em;
+        }
+
+        h2 {
+            font-size: 1.3em;
+            color: #202122;
+            margin-top: 1em;
+            margin-bottom: 0.5em;
+        }
+
+        .upload-container {
+            margin-bottom: 1em;
+        }
+
+        .upload-label {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5em 1em;
+            background-color: #f2f2f2;
+            color: #202122;
+            border: 1px solid #a2a9b1;
+            border-radius: 0.2em;
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out;
+        }
+
+        .upload-label:hover {
+            background-color: #e0e0e0;
+        }
+
+        .upload-label svg {
+            width: 1em;
+            height: 1em;
+            margin-right: 0.5em;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+        }
+
+        .file-name {
+            margin-top: 0.3em;
+            font-size: 0.9em;
+            color: #54595d;
+        }
+
+        .grid-cols-3 {
+            display: grid;
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+            gap: 0.8em;
+            margin-top: 0.8em;
+            margin-bottom: 1em;
+        }
+
+        @media (min-width: 768px) {
+            .grid-cols-3 {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        .form-group label {
+            display: block;
+            color: #54595d;
+            font-size: 0.9em;
+            margin-bottom: 0.3em;
+        }
+
+        .form-group input[type="range"] {
+            width: 100%;
+        }
+
+        .canvas-container {
+            margin-top: 0.5em;
+            border: 1px solid #a2a9b1;
+            padding: 0.5em;
+            background-color: #fff;
+        }
+
+        #originalCanvas {
+            max-width: 100%;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .configuration {
+            margin-bottom: 1em;
+        }
+
+        .grid-cols-2 {
+            display: grid;
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+            gap: 0.8em;
+        }
+
+        .grid-cols-25 {
+            display: grid;
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+            gap: 0.8em;
+        }
+
+        @media (min-width: 470px) {
+            .grid-cols-25 {
+                grid-template-columns: minmax(0, .7fr) minmax(0, .3fr);
+            }
+        }
+
+        @media (min-width: 768px) {
+            .grid-cols-2 {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        .form-control label {
+            display: block;
+            color: #54595d;
+            font-size: 0.9em;
+            margin-bottom: 0.3em;
+        }
+
+        .form-control input[type="number"],
+        .form-control select,
+        .form-control input[type="color"] {
+            box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            appearance: none;
+            border: 1px solid #a2a9b1;
+            border-radius: 0.2em;
+            width: 100%;
+            padding: 0.3em 0.5em;
+            color: #202122;
+            line-height: inherit;
+            outline: none;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            background-color: #fff;
+        }
+
+        .form-control input[type="number"]:focus,
+        .form-control select:focus {
+            border-color: #004fa0;
+            box-shadow: 0 0 0 0.2em rgba(51, 102, 204, 0.25);
+        }
+
+        #palettePreview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3em;
+            margin-top: 0.5em;
+            justify-content: flex-start;
+        }
+
+        .palette-color {
+            width: 1.2em;
+            height: 1.2em;
+            border-radius: 0.2em;
+            border: 1px solid #ccc;
+        }
+
+        #custom-palette-container {
+            display: none;
+            margin-top: 0.5em;
+        }
+
+        #custom-palette-container label {
+            display: block;
+            color: #54595d;
+            font-size: 0.9em;
+            margin-bottom: 0.3em;
+        }
+
+        #custom-palette-container input[type="color"] {
+            margin-right: 0.5em;
+            border: 1px solid #a2a9b1;
+            border-radius: 0.2em;
+            padding: 0;
+        }
+
+        #custom-palette-container button {
+            background-color: #f2f2f2;
+            color: #202122;
+            border: 1px solid #a2a9b1;
+            border-radius: 0.2em;
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out;
+            font-size: 0.9em;
+        }
+
+        #custom-palette-container button:hover {
+            background-color: #e0e0e0;
+        }
+
+        #custom-palette {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3em;
+            margin-top: 0.3em;
+        }
+
+        .custom-color {
+            width: 1.5em;
+            height: 1.5em;
+            margin: 0.2em;
+            position: relative;
+            border-radius: 0.2em;
+            display: inline-block;
+            box-shadow: 0 0 0.2em rgba(0, 0, 0, 0.3);
+            border: 1px solid #a2a9b1;
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: -0.4em;
+            right: -0.4em;
+            background: #cc0000;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 0.7em;
+            width: 0.9em;
+            height: 0.9em;
+            cursor: pointer;
+            line-height: 0.8em;
+            padding: 0;
+        }
+
+        .convert-button-container {
+            margin-bottom: 0.8em;
+            margin-top: 2em;
+            text-align: center;
+        }
+
+        #convertButton {
+            background-color: #5cb85c;
+            color: white;
+            font-weight: bold;
+            padding: 0.5em 1em;
+            border-radius: 0.2em;
+            cursor: pointer;
+            outline: none;
+            border: 1px solid #4cae4c;
+            transition: background-color 0.15s ease-in-out;
+            font-size: 0.9em;
+        }
+
+        #convertButton:hover {
+            background-color: #4cae4c;
+        }
+
+        .advertisement {
+            margin-bottom: 1em;
+            text-align: center;
+            border: 1px solid #a2a9b1;
+            padding: 0.5em;
+            background-color: #f9f9f9;
+            border-radius: 0.2em;
+        }
+
+        .advertisement p {
+            color: #54595d;
+            font-size: 0.8em;
+            margin-top: 0.3em;
+        }
+
+        .output-container {
+            margin-bottom: 1em;
+        }
+
+        #output {
+            font-size: 1.2em;
+            color: #202122;
+            margin-top: 1em;
+            margin-bottom: 0.5em;
+            border-bottom: 1px solid #a2a9b1;
+            padding-bottom: 0.3em;
+        }
+
+        #pixelCanvas {
+            max-width: 100%;
+            display: block;
+            margin: 0 auto;
+            border: 1px solid #a2a9b1;
+            background-color: #fff;
+        }
+
+        .download-container {
+            text-align: center;
+            margin-top: 0.8em;
+        }
+
+        #downloadLink {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5em 1em;
+            background-color: #004fa0;
+            color: white;
+            border-radius: 0.2em;
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out;
+            text-decoration: none;
+            border: 1px solid #004fa0;
+            font-size: 0.9em;
+        }
+
+        #downloadLink:hover {
+            background-color: #2e5cb8;
+        }
+
+        #downloadLink svg {
+            width: 1em;
+            height: 1em;
+            margin-right: 0.3em;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+        }
+
+        a {
+            color: #004fa0;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .hidden {
+            display: none;
+            visibility: hidden;
+        }
+
+        .info-icon {
+            width: 1em;
+            height: 1em;
+            margin-left: 0.3em;
+            cursor: help;
+        }
+
+        .keyword {
+            font-weight: bold;
+            color: #004fa0;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 5px;
+            background: #e0e0e0;
+            outline: none;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #3366cc;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: none;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #3366cc;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover,
+        input[type="range"]::-moz-range-thumb:hover {
+            background: #2a4d8f;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:active,
+        input[type="range"]::-moz-range-thumb:active {
+            background: #1e335e;
+        }
+
+        #error-status{
+            color: red;
+            background: #eee;
+            padding: 10px;
+            border: 1px solid;
+        }
+
+        #custom-error-status{
+            color: red;
+            font-size: .8em;
+            margin-top: .3em
+        }
+
+        input[type=range] {
+            pointer-events: none;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            pointer-events: auto;
+        }
+    </style>
 </head>
-<body onload="closeWindow()">
+<body>
+<div class="container">
+    <h1>Free Online <span class="keyword">Image to Pixel Art Converter</span></h1>
+
+    <div class="upload-container">
+        <label for="imageUpload" class="upload-label">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-11-4l5-5m0 0l5 5m-5-5v12"></path>
+            </svg>
+            <span>Upload image</span>
+            <input id="imageUpload" type="file" accept="image/*" style="display: none;"/>
+        </label>
+        <p id="file-name" class="file-name"></p>
+        <p id="error-status" hidden></p>
+        <div class="canvas-container">
+            <canvas id="originalCanvas" class=""></canvas>
+        </div>
+    </div>
+
+    <div class="configuration">
+        <h2>Configuration</h2>
+        <div class="grid-cols-3">
+            <div class="form-group">
+                <label for="brightness">Brightness:</label>
+                <input type="range" id="brightness" min="0" max="200" value="100" class=""/>
+            </div>
+            <div class="form-group">
+                <label for="contrast">Contrast:</label>
+                <input type="range" id="contrast" min="0" max="200" value="100" class=""/>
+            </div>
+            <div class="form-group">
+                <label for="saturation">Saturation:</label>
+                <input type="range" id="saturation" min="0" max="200" value="100" class=""/>
+            </div>
+        </div>
+        <div class="grid-cols-2">
+            <div class="grid-cols-2">
+                <div class="form-control">
+                    <label for="pixelSize">Pixel size:</label>
+                    <input type="number" id="pixelSize" value="10" min="2" max="100" class=""/>
+                </div>
+                <div class="form-control hidden" id="algorithmContainer">
+                    <label id="algorithm-label" for="algorithm">Algorithm:
+                        <a href="#algorithm-help" title="Learn more about pixel art generation algorithms">
+                            <svg class="info-icon" viewBox="0 0 24 24">
+                                <path fill="#004fa0"
+                                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-6h2v6zm-1-8c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/>
+                            </svg>
+                        </a>
+                    </label>
+                    <select id="algorithm">
+                        <option value="ciede2000">True color (CIEDE2000)</option>
+                        <option value="luminance">Luminance distance</option>
+                        <option value="euclidean">RGB Distance (Euclidean distance)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-control">
+                <label for="colorPalette">Color palette:
+                    <a href="#palette-help" title="Explore different color palettes for your pixel art">
+                        <svg class="info-icon" viewBox="0 0 24 24">
+                            <path fill="#004fa0"
+                                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-6h2v6zm-1-8c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/>
+                        </svg>
+                    </a>
+                </label>
+                <select id="colorPalette" class="">
+                    <option value="original">Original</option>
+                    <option value="custom">🎨Custom</option>
+                    <option value="retro">Retro</option>
+                    <option value="vibrant">Vibrant</option>
+                    <option value="pastel">Pastel</option>
+                    <option value="neon">Neon</option>
+                    <option value="earthy">Earthy</option>
+                    <option value="monochrome">Monochrome</option>
+                    <option value="ocean">Ocean</option>
+                    <option value="sunset">Sunset</option>
+                    <option value="forest">Forest</option>
+                    <option value="cyberpunk">Cyberpunk</option>
+                    <option value="retro-future">Retro-Future</option>
+                    <option value="high-contrast">High Contrast</option>
+                    <option value="vintage">Vintage</option>
+                    <option value="cool">Cool</option>
+                    <option value="warm">Warm</option>
+                    <option value="classic">Classic</option>
+                    <option value="dawn">Dawn</option>
+                    <option value="twilight">Twilight</option>
+                    <option value="NES">NES</option>
+                    <option value="C64">Commodore 64</option>
+                    <option value="GameBoy">Game Boy</option>
+                    <option value="Atari">Atari 2600</option>
+                </select>
+                <button id="delete-current" hidden>Delete Palette</button>
+                <div id="palettePreview"></div>
+                <div class="container" id="custom-palette-container">
+                    <div class="grid-cols-25">
+                        <div class="form-control">
+                            <label for="methodSelect">Generate palette:
+                                <a href="#generate-palette-help" title="Generate a color palette from your image">
+                                    <svg class="info-icon" viewBox="0 0 24 24">
+                                        <path fill="#004fa0"
+                                              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-6h2v6zm-1-8c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/>
+                                    </svg>
+                                </a>
+                            </label>
+                            <select id="methodSelect">
+                                <option value="median">Median Cut</option>
+                                <option value="kmeans">K-Means</option>
+                                <option value="histogram">Histogram</option>
+                                <option value="uniform">Uniform</option>
+                            </select>
+                            <button id="generate-palette">Generate from image</button>
+                        </div>
+                        <div class="form-control">
+                            <label for="color-picker">Pick Color:</label>
+                            <input type="color" id="color-picker">
+                            <br/>
+                            <button id="add-color-btn">Add</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="savePaletteContainer" hidden>
+                    <label for="savePaletteName">Save custom palette:</label><input id="savePaletteName">
+                    <button id="savePaletteBtn">Save</button>
+                    <div id="custom-error-status"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="convert-button-container">
+        <button id="convertButton" class="">Convert to pixel art</button>
+    </div>
+
+    <div class="output-container">
+        <h2 id="output" class="">Output</h2>
+        <canvas id="pixelCanvas" class=""></canvas>
+    </div>
+
+    <div class="download-container">
+        <a id="downloadLink" download="pixel_art.png" class="">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                 xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-11-4l5-5m0 0l5
+            5m-5-5v12"></path>
+            </svg>
+            <span>Download pixel art</span>
+        </a>
+    </div>
+</div>
+<canvas id="canvasGen" hidden></canvas>
+<br/>
+<div class="container">
+    <h1><span class="keyword">Pixel Art Generator</span> - Feature Guide</h1>
+
+    <p>Welcome to the Pixel Art Generator! This page provides a detailed explanation of the features available to help
+        you transform your images into unique pixel art creations.</p>
+
+    <h2 id="algorithm-help">Pixel Art Generation Algorithms</h2>
+    <p>Choose the algorithm that best suits the desired style of your pixel art:</p>
+    <ul>
+        <li>
+            <strong>Euclidean Distance:</strong> This method calculates the straight-line distance between colors in the
+            RGB color space. It's a fundamental and often effective approach for quantizing colors.
+        </li>
+        <li>
+            <strong>Luminance Distance:</strong> This algorithm focuses on the perceived brightness difference between
+            colors. It can be useful for preserving tonal variations and details in your pixel art.
+        </li>
+        <li>
+            <strong>CIEDE2000:</strong> A more advanced color difference formula that aims to better reflect human color
+            perception. It often produces more visually accurate results, especially for images with subtle color
+            gradients.
+        </li>
+    </ul>
+
+    <h2 id="palette-help">Preset Palettes</h2>
+    <p>Explore our collection of <strong>21 pre-defined color palettes</strong>. These curated palettes offer a variety
+        of aesthetic styles, allowing you to instantly apply a specific color scheme to your pixel art. Simply select
+        your desired palette from the dropdown menu.</p>
+
+    <h2>Custom Palettes</h2>
+    <p>Take full control over the color selection by creating your own <strong>custom palettes</strong>:</p>
+    <ul>
+        <li>
+            <strong>Create Palette:</strong> Add individual colors to your custom palette using the color input field.
+            You can specify colors using Hex, RGB, or HSL values.
+        </li>
+        <li>
+            <strong>Save Palette:</strong> Store your favorite custom palettes for future use. Enter a name for your
+            palette and click the "Save" button.
+        </li>
+        <li>
+            <strong>Delete Palette:</strong> Remove custom palettes that you no longer need. Click the "Delete" button
+            next to the palette you wish to remove.
+        </li>
+    </ul>
+
+    <h2 id="generate-palette-help">Palette Generation from Image</h2>
+    <p>Let the tool automatically generate a color palette based on the colors present in your input image. Choose from
+        the following methods:</p>
+    <ul>
+        <li>
+            <strong>Mean-Cut:</strong> A clustering algorithm that recursively divides the color space to identify
+            dominant color clusters.
+        </li>
+        <li>
+            <strong>K-means:</strong> An iterative clustering algorithm that partitions the image colors into a
+            specified number of clusters based on color similarity.
+        </li>
+        <li>
+            <strong>Histogram:</strong> This method analyzes the frequency of each color in the image and selects the
+            most frequently occurring colors for the palette.
+        </li>
+        <li>
+            <strong>Uniform:</strong> This method divides the color space into equal intervals to create a palette with
+            a uniform distribution of colors.
+        </li>
+    </ul>
+
+    <h2>Adjust Pixel Size</h2>
+    <p>Control the level of detail in your pixel art by adjusting the <strong>pixel size</strong>. A smaller pixel size
+        will result in finer details, while a larger size will create a more blocky and abstract appearance. Use the
+        slider or input field to set your desired pixel dimensions.</p>
+
+    <h2>Image Adjustments</h2>
+    <p>Fine-tune your input image before generating pixel art using the following adjustments:</p>
+    <ul>
+        <li>
+            <strong>Brightness:</strong> Adjust the overall lightness or darkness of the image.
+        </li>
+        <li>
+            <strong>Contrast:</strong> Modify the difference between the light and dark areas of the image, enhancing
+            detail.
+        </li>
+        <li>
+            <strong>Saturation:</strong> Control the intensity and vividness of the colors in the image.
+        </li>
+    </ul>
+
+    <h2>Download Pixel Art</h2>
+    <p>Once you are satisfied with your pixel art, you can easily <strong>download it as an image file</strong>. Click
+        the "Download" button to save your creation.</p>
+</div>
 <script>
-function closeWindow(){
-history.back();
-}
+    const canvas = document.getElementById('pixelCanvas');
+    const imgCanvas = document.getElementById('originalCanvas');
+    const ctx = canvas.getContext('2d');
+    const ctxOrg = imgCanvas.getContext('2d', {
+        willReadFrequently: true
+    });
+    const uploadBtn = document.getElementById('imageUpload');
+    const pixelSizeInput = document.getElementById('pixelSize');
+    const paletteSelect = document.getElementById('colorPalette');
+    const colorPicker = document.getElementById('color-picker');
+    const customPaletteContainer = document.getElementById('custom-palette-container');
+    const addColorBtn = document.getElementById('add-color-btn');
+    const convertButton = document.getElementById('convertButton');
+    const deleteCurrentPalette = document.getElementById('delete-current');
+    const savePaletteBtn = document.getElementById('savePaletteBtn');
+    const generatePaletteBtn = document.getElementById('generate-palette');
+    const algorithmSelect = document.getElementById('algorithm');
+    const errorStatus = document.getElementById('error-status');
+    let img = new Image();
+    let originalImage = null;
+    let selectedPalette = [];
+    const LOCALSTORAGE_KEY = 'pixelArtCustomPalettes';
+    let customPalettes = loadCustomPalettes();
+
+    const palettes = {
+        'original': [], // No change to colors
+        'grayscale': [
+            [0, 0, 0],
+            [128, 128, 128],
+            [255, 255, 255]
+        ],
+        'retro': [
+            [0, 0, 0],
+            [255, 0, 0],
+            [0, 255, 0],
+            [0, 0, 255],
+            [255, 255, 0],
+            [0, 255, 255],
+            [255, 0, 255]
+        ],
+        'vibrant': [
+            [255, 0, 0],
+            [255, 165, 0],
+            [255, 255, 0],
+            [0, 255, 0],
+            [0, 0, 255],
+            [75, 0, 130],
+            [238, 130, 238]
+        ],
+        'pastel': [
+            [255, 182, 193],
+            [255, 224, 185],
+            [192, 255, 218],
+            [186, 227, 255],
+            [225, 204, 255],
+            [255, 204, 204]
+        ],
+        'neon': [
+            [57, 255, 20],
+            [255, 0, 255],
+            [255, 255, 0],
+            [0, 255, 255],
+            [255, 0, 0],
+            [0, 0, 255],
+            [255, 105, 180]
+        ],
+        'earthy': [
+            [139, 69, 19],
+            [160, 82, 45],
+            [255, 99, 71],
+            [34, 139, 34],
+            [0, 128, 0],
+            [188, 143, 143],
+            [255, 255, 255]
+        ],
+        'monochrome': [
+            [0, 0, 0],
+            [80, 80, 80],
+            [160, 160, 160],
+            [240, 240, 240],
+            [255, 255, 255]
+        ],
+        'ocean': [
+            [0, 105, 148],
+            [0, 191, 255],
+            [0, 128, 128],
+            [70, 130, 180],
+            [255, 255, 255]
+        ],
+        'sunset': [
+            [255, 69, 0],
+            [255, 99, 71],
+            [255, 127, 80],
+            [255, 215, 0],
+            [255, 255, 255]
+        ],
+        'forest': [
+            [34, 139, 34],
+            [85, 107, 47],
+            [107, 142, 35],
+            [139, 69, 19],
+            [0, 128, 0]
+        ],
+        'cyberpunk': [
+            [255, 20, 147],
+            [0, 255, 255],
+            [255, 0, 255],
+            [0, 255, 0],
+            [255, 165, 0],
+            [238, 130, 238]
+        ],
+        'retro-future': [
+            [255, 0, 0],
+            [255, 165, 0],
+            [255, 255, 0],
+            [0, 255, 255],
+            [75, 0, 130],
+            [238, 130, 238]
+        ],
+        'high-contrast': [
+            [0, 0, 0],
+            [255, 255, 255],
+            [255, 0, 0],
+            [0, 255, 0],
+            [0, 0, 255]
+        ],
+        'vintage': [
+            [128, 0, 0],
+            [255, 218, 185],
+            [160, 82, 45],
+            [245, 245, 220],
+            [0, 0, 0]
+        ],
+        'cool': [
+            [0, 255, 255],
+            [0, 191, 255],
+            [173, 216, 230],
+            [70, 130, 180],
+            [135, 206, 235]
+        ],
+        'warm': [
+            [255, 99, 71],
+            [255, 140, 0],
+            [255, 69, 0],
+            [255, 105, 180],
+            [255, 215, 0]
+        ],
+        'classic': [
+            [0, 0, 0],
+            [255, 255, 255],
+            [255, 0, 0],
+            [0, 255, 0],
+            [0, 0, 255],
+            [255, 255, 0]
+        ],
+        'dawn': [
+            [255, 99, 71],
+            [255, 165, 0],
+            [255, 69, 0],
+            [255, 105, 180],
+            [240, 128, 128]
+        ],
+        'twilight': [
+            [138, 43, 226],
+            [75, 0, 130],
+            [0, 0, 139],
+            [32, 178, 170],
+            [72, 61, 139]
+        ],
+        'NES': [
+            [124, 124, 124],
+            [0, 0, 252],
+            [0, 0, 188],
+            [68, 40, 188],
+            [148, 0, 132],
+            [168, 0, 32],
+            [168, 16, 0],
+            [136, 20, 0],
+            [80, 48, 0],
+            [0, 120, 0],
+            [0, 104, 0],
+            [0, 88, 0],
+            [0, 64, 88],
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0]
+        ],
+        'C64': [
+            [0, 0, 0],
+            [255, 255, 255],
+            [136, 0, 0],
+            [170, 255, 238],
+            [204, 68, 204],
+            [0, 204, 85],
+            [0, 0, 170],
+            [238, 238, 119],
+            [221, 136, 85],
+            [102, 68, 0],
+            [255, 119, 119],
+            [51, 51, 51],
+            [119, 119, 119],
+            [170, 255, 102],
+            [0, 136, 255],
+            [187, 187, 187]
+        ],
+        'GameBoy': [
+            [15, 56, 15],
+            [48, 98, 48],
+            [139, 172, 15],
+            [155, 188, 15]
+        ],
+        'Atari': [
+            [0, 0, 0],
+            [255, 255, 255],
+            [228, 0, 88],
+            [0, 228, 54],
+            [0, 96, 255],
+            [255, 216, 0],
+            [255, 0, 255],
+            [0, 255, 255],
+            [132, 0, 255],
+            [255, 128, 0],
+            [88, 88, 88],
+            [192, 192, 192]
+        ]
+    };
+
+    document.getElementById("downloadLink").addEventListener("click", () => {
+        const link = document.createElement("a");
+        link.download = "pixel-art.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+    });
+
+    uploadBtn.addEventListener('change', function (e) {
+        try {
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                img.onload = function () {
+                    originalImage = img;
+                    // Set canvas size to image size
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    imgCanvas.width = img.width;
+                    imgCanvas.height = img.height;
+                    // Draw the image
+                    ctxOrg.drawImage(img, 0, 0);
+                };
+                img.src = event.target.result.toString();
+            };
+            reader.readAsDataURL(e.target.files[0]);
+            document.getElementById("brightness").value = 100;
+            document.getElementById("contrast").value = 100;
+            document.getElementById("saturation").value = 100;
+            document.getElementById("file-name").textContent = e.target.files[0].name;
+
+            hideImageNotUploaded()
+        } catch (e) {
+            showImageNotUploaded();
+        }
+    });
+
+    function loadCustomPalettes() {
+        const storedPalettes = localStorage.getItem(LOCALSTORAGE_KEY);
+        return storedPalettes ? JSON.parse(storedPalettes) : {};
+    }
+
+    function saveCustomPalettes() {
+        localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(customPalettes));
+    }
+
+    function addNamedPalette() {
+        document.getElementById('custom-error-status').hidden = true;
+        const paletteName = document.getElementById("savePaletteName").value;
+        if (paletteName !== '' && !customPalettes[paletteName]) {
+            customPalettes[paletteName] = [...selectedPalette.map(c => [...c])]; // Deep copy
+            updateStoredPalettesDropdown();
+            saveCustomPalettes();
+
+            paletteSelect.selectedIndex = paletteSelect.length - 1;
+            paletteSelect.dispatchEvent(new Event('change'));
+
+        } else {
+            document.getElementById('custom-error-status').hidden = false;
+            document.getElementById('custom-error-status').innerHTML = "Palette name already exists or is empty.";
+        }
+    }
+
+    function deleteNamedPalette(paletteName) {
+        delete customPalettes[paletteName];
+        updateStoredPalettesDropdown();
+        saveCustomPalettes();
+        paletteSelect.dispatchEvent(new Event("change"));
+    }
+
+    function updateStoredPalettesDropdown() {
+        const existingGroup = paletteSelect.querySelector('optgroup[label="Saved Palettes"]');
+        if (existingGroup) {
+            paletteSelect.removeChild(existingGroup);
+        }
+
+        if (Object.keys(customPalettes).length > 0) {
+            const savedPalettesGroup = document.createElement('optgroup');
+            savedPalettesGroup.label = 'Saved Palettes';
+            for (const name in customPalettes) {
+                const option = document.createElement('option');
+                option.value = name;
+                option.textContent = name;
+                savedPalettesGroup.appendChild(option);
+            }
+            paletteSelect.appendChild(savedPalettesGroup);
+        }
+    }
+
+    paletteSelect.addEventListener('change', function () {
+
+        deleteCurrentPalette.hidden = true;
+        document.getElementById('algorithmContainer').classList.remove('hidden');
+        const selectedName = paletteSelect.value;
+
+        if (selectedName === 'original') {
+            document.getElementById('algorithmContainer').classList.add('hidden');
+        }
+
+        if (selectedName === 'custom') {
+            customPaletteContainer.style.display = 'block';
+            updatePalettePreview();
+        } else if (customPalettes[selectedName]) {
+            customPaletteContainer.style.display = 'none';
+            selectedPalette = customPalettes[selectedName].map(c => [...c]); // Load saved palette
+            deleteCurrentPalette.hidden = false;
+            updatePalettePreview();
+        } else {
+            customPaletteContainer.style.display = 'none';
+            selectedPalette = palettes[selectedName];
+            updatePalettePreview();
+        }
+        updateCustomPalette();
+    });
+
+    addColorBtn.addEventListener('click', function () {
+        const color = colorPicker.value;
+        const rgb = hexToRgb(color);
+        selectedPalette.push(rgb);
+        updateCustomPalette();
+        updatePalettePreview()
+    });
+
+    deleteCurrentPalette.addEventListener('click', function () {
+        deleteNamedPalette(paletteSelect.value);
+    });
+    savePaletteBtn.addEventListener('click', addNamedPalette);
+
+    function updateCustomPalette() {
+        // Add save button if custom palette has colors
+        document.getElementById('savePaletteContainer').hidden = !(selectedPalette.length > 0 && paletteSelect.value === 'custom');
+    }
+
+    updateStoredPalettesDropdown();
+
+    convertButton.addEventListener('click', function () {
+        applyPixelation();
+        document.getElementById('output').scrollIntoView();
+    });
+
+    function showImageNotUploaded() {
+        errorStatus.hidden = false;
+        errorStatus.innerHTML = "Please upload a valid image.";
+        errorStatus.scrollIntoView(false);
+    }
+
+    function hideImageNotUploaded() {
+        errorStatus.hidden = true;
+        document.getElementById('custom-error-status').hidden = true;
+    }
+
+    function hexToRgb(hex) {
+        const r = parseInt(hex.slice(1, 3), 16);
+        const g = parseInt(hex.slice(3, 5), 16);
+        const b = parseInt(hex.slice(5, 7), 16);
+        return [r, g, b];
+    }
+
+    function updatePalettePreview() {
+        const preview = document.getElementById("palettePreview");
+        preview.innerHTML = "";
+
+        if (selectedPalette) {
+
+            if (paletteSelect.value === 'custom') {
+                selectedPalette.forEach((color, index) => {
+                    const colorDiv = document.createElement("div");
+                    colorDiv.className = "custom-color";
+                    colorDiv.style.backgroundColor = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+
+                    const deleteBtn = document.createElement("button");
+                    deleteBtn.textContent = "✕";
+                    deleteBtn.className = "delete-btn";
+                    deleteBtn.addEventListener("click", () => {
+                        selectedPalette.splice(index, 1);
+                        updateCustomPalette();
+                        updatePalettePreview()
+                    });
+
+                    colorDiv.appendChild(deleteBtn);
+                    preview.appendChild(colorDiv);
+                });
+            } else {
+                selectedPalette.forEach(color => {
+                    const swatch = document.createElement("div");
+                    swatch.className = "palette-color";
+                    swatch.style.backgroundColor = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                    preview.appendChild(swatch);
+                });
+            }
+
+        }
+    }
+
+    ["brightness", "contrast", "saturation"].forEach(id => {
+        document.getElementById(id).addEventListener("input", () => {
+            if (originalImage) {
+                applyBCS(ctxOrg);
+                ctxOrg.drawImage(originalImage, 0, 0, imgCanvas.width, imgCanvas.height);
+            }
+        });
+    });
+
+    function applyBCS(context) {
+        const brightness = parseInt(document.getElementById("brightness").value);
+        const contrast = parseInt(document.getElementById("contrast").value);
+        const saturation = parseInt(document.getElementById("saturation").value);
+        context.filter = `brightness(${brightness}%) contrast(${contrast}%) saturate(${saturation}%)`;
+    }
+
+    // Convert RGB to XYZ
+    function rgbToXyz(r, g, b) {
+        r = r / 255;
+        g = g / 255;
+        b = b / 255;
+
+        r = r > 0.04045 ? Math.pow((r + 0.055) / 1.055, 2.4) : r / 12.92;
+        g = g > 0.04045 ? Math.pow((g + 0.055) / 1.055, 2.4) : g / 12.92;
+        b = b > 0.04045 ? Math.pow((b + 0.055) / 1.055, 2.4) : b / 12.92;
+
+        const x = (r * 0.4124 + g * 0.3576 + b * 0.1805) * 100;
+        const y = (r * 0.2126 + g * 0.7152 + b * 0.0722) * 100;
+        const z = (r * 0.0193 + g * 0.1192 + b * 0.9505) * 100;
+        return [x, y, z];
+    }
+
+    // Convert XYZ to LAB
+    function xyzToLab(x, y, z) {
+        const refX = 95.047;
+        const refY = 100.000;
+        const refZ = 108.883;
+
+        x /= refX;
+        y /= refY;
+        z /= refZ;
+
+        x = x > 0.008856 ? Math.pow(x, 1 / 3) : (7.787 * x) + (16 / 116);
+        y = y > 0.008856 ? Math.pow(y, 1 / 3) : (7.787 * y) + (16 / 116);
+        z = z > 0.008856 ? Math.pow(z, 1 / 3) : (7.787 * z) + (16 / 116);
+
+        const l = (116 * y) - 16;
+        const a = 500 * (x - y);
+        const b = 200 * (y - z);
+
+        return [l, a, b];
+    }
+
+    function rgbToLab(r, g, b) {
+        const [x, y, z] = rgbToXyz(r, g, b);
+        return xyzToLab(x, y, z);
+    }
+
+    function deltaE00(lab1, lab2, kL = 1, kC = 1, kH = 1) {
+        const L1 = lab1[0];
+        const a1 = lab1[1];
+        const b1 = lab1[2];
+        const L2 = lab2[0];
+        const a2 = lab2[1];
+        const b2 = lab2[2];
+
+        const C1 = Math.sqrt(a1 * a1 + b1 * b1);
+        const C2 = Math.sqrt(a2 * a2 + b2 * b2);
+        const deltaL = L2 - L1;
+
+        const C_avg = (C1 + C2) / 2;
+        const G = 0.5 * (1 - Math.sqrt(Math.pow(C_avg, 7) / (Math.pow(C_avg, 7) + Math.pow(25, 7))));
+        const a1_prime = a1 * (1 + G);
+        const a2_prime = a2 * (1 + G);
+        const C1_prime = Math.sqrt(a1_prime * a1_prime + b1 * b1);
+        const C2_prime = Math.sqrt(a2_prime * a2_prime + b2 * b2);
+        const deltaC_prime = C2_prime - C1_prime;
+
+        let h1_prime = Math.atan2(b1, a1_prime);
+        if (h1_prime >= 0) {
+            h1_prime = (h1_prime / Math.PI) * 180;
+        } else {
+            h1_prime = (h1_prime / Math.PI) * 180 + 360;
+        }
+        let h2_prime = Math.atan2(b2, a2_prime);
+        if (h2_prime >= 0) {
+            h2_prime = (h2_prime / Math.PI) * 180;
+        } else {
+            h2_prime = (h2_prime / Math.PI) * 180 + 360;
+        }
+
+        let deltaH_prime = h2_prime - h1_prime;
+        if (Math.abs(deltaH_prime) > 180) {
+            if (h2_prime <= h1_prime) {
+                deltaH_prime += 360;
+            } else {
+                deltaH_prime -= 360;
+            }
+        }
+
+        const deltaL_prime = deltaL;
+        const deltaH_prime_val = 2 * Math.sqrt(C1_prime * C2_prime) * Math.sin((deltaH_prime * Math.PI) / 360);
+
+        const L_avg_prime = (L1 + L2) / 2;
+        const C_avg_prime = (C1_prime + C2_prime) / 2;
+
+        let h_avg_prime = (Math.abs(h1_prime - h2_prime) > 180) ? (h1_prime + h2_prime + 360) / 2 : (h1_prime + h2_prime) / 2;
+
+        const T = 1 - 0.17 * Math.cos(((h_avg_prime * Math.PI) / 180) - (30 * Math.PI) / 180) +
+            0.24 * Math.cos((2 * (h_avg_prime * Math.PI) / 180)) +
+            0.32 * Math.cos(((3 * (h_avg_prime * Math.PI) / 180) + (6 * Math.PI) / 180)) -
+            0.20 * Math.cos(((4 * (h_avg_prime * Math.PI) / 180) - (63 * Math.PI) / 180));
+
+        const S_L = 1 + ((0.015 * Math.pow(L_avg_prime - 50, 2)) / Math.sqrt(20 + Math.pow(L_avg_prime - 50, 2)));
+        const S_C = 1 + 0.045 * C_avg_prime;
+        const S_H = 1 + 0.015 * C_avg_prime * T;
+
+        const delta_theta = 30 * Math.exp(-Math.pow(((h_avg_prime - 275) / 25), 2));
+        const R_C = 2 * Math.sqrt(Math.pow(C_avg_prime, 7) / (Math.pow(C_avg_prime, 7) + Math.pow(25, 7)));
+        const R_T = -Math.sin((2 * delta_theta * Math.PI) / 180) * R_C;
+
+        return Math.sqrt(
+            Math.pow(deltaL_prime / (kL * S_L), 2) +
+            Math.pow(deltaC_prime / (kC * S_C), 2) +
+            Math.pow(deltaH_prime_val / (kH * S_H), 2) +
+            R_T * (deltaC_prime / (kC * S_C)) * (deltaH_prime_val / (kH * S_H))
+        );
+    }
+
+    async function applyPixelation() {
+
+        if (img.src === "") {
+            showImageNotUploaded()
+            return;
+        }
+
+        hideImageNotUploaded()
+
+        try {
+            disableApplyButton();
+
+            const pixelSize = parseInt(pixelSizeInput.value);
+
+            const width = canvas.width;
+            const height = canvas.height;
+
+            ctx.drawImage(img, 0, 0);
+            const imageData = ctxOrg.getImageData(0, 0, width, height);
+            const data = imageData.data;
+
+            async function processRows(startRow) {
+                for (let y = startRow; y < Math.min(startRow + 50, height); y += pixelSize) { // Process in chunks of 50 rows
+                    for (let x = 0; x < width; x += pixelSize) {
+                        const index = (y * width + x) * 4;
+                        const r = data[index];
+                        const g = data[index + 1];
+                        const b = data[index + 2];
+
+                        let color = [r, g, b];
+                        if (selectedPalette.length > 0) {
+                            switch (algorithmSelect.value) {
+                                case 'euclidean':
+                                    color = color = findNearestColorByEuclideanDistance(color, selectedPalette);
+                                    break;
+                                case 'luminance':
+                                    color = color = findNearestColorByBrightness(color, selectedPalette);
+                                    break;
+                                case 'ciede2000':
+                                    color = color = findNearestColorByCIEDE2000(r, g, b, selectedPalette);
+                                    break;
+                            }
+                        }
+
+                        ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                        ctx.fillRect(x, y, pixelSize, pixelSize);
+                    }
+                }
+
+                if (startRow + 50 < height) {
+                    await new Promise(resolve => requestAnimationFrame(resolve)); // Yield control
+                    await processRows(startRow + 50);
+                }
+            }
+
+            await processRows(0);
+
+            hideImageNotUploaded()
+
+        } catch (e) {
+            showImageNotUploaded();
+        }
+        enableApplyButton();
+
+    }
+
+    function findNearestColorByCIEDE2000(r, g, b, palette) {
+        const lab1 = rgbToLab(r, g, b);
+        let minDistance = Infinity;
+        let closest = palette[0];
+
+        for (const rgb of palette) {
+            const lab2 = rgbToLab(rgb[0], rgb[1], rgb[2]);
+            const dE = deltaE00(lab1, lab2);
+            if (dE < minDistance) {
+                minDistance = dE;
+                closest = rgb;
+            }
+        }
+        return closest;
+    }
+
+    const getRelativeLuminance = (rgb) => 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2];
+
+    function brightnessDistance(color1, color2) {
+        const colLum1 = getRelativeLuminance(color1);
+        const colLum2 = getRelativeLuminance(color2);
+        return Math.abs(colLum1 - colLum2);
+    }
+
+    // Function to calculate Euclidean distance between two RGB colors
+    function euclideanDistance(color1, color2) {
+        const rDiff = color1[0] - color2[0];
+        const gDiff = color1[1] - color2[1];
+        const bDiff = color1[2] - color2[2];
+        return Math.sqrt(rDiff * rDiff + gDiff * gDiff + bDiff * bDiff);
+    }
+
+    function findNearestColorByEuclideanDistance(color, palette) {
+        return palette.reduce((a, b) => euclideanDistance(color, a) < euclideanDistance(color, b) ? a : b);
+    }
+
+    function findNearestColorByBrightness(color, palette) {
+        return palette.reduce((a, b) => brightnessDistance(color, a) < brightnessDistance(color, b) ? a : b);
+    }
+
+    function disableApplyButton() {
+        convertButton.disabled = true;
+    }
+
+    function enableApplyButton() {
+        convertButton.disabled = false;
+    }
+
+    generatePaletteBtn.addEventListener("click", async () => {
+        try {
+            selectedPalette = generatePalette()
+            updateCustomPalette();
+            updatePalettePreview();
+            hideImageNotUploaded()
+        } catch (e) {
+            showImageNotUploaded();
+        }
+    })
+
+    /**
+     * Color generation
+     */
+    const canvasGen = document.getElementById("canvasGen");
+    const ctxGen = canvasGen.getContext("2d", {
+        willReadFrequently: true
+    });
+    const methodSelect = document.getElementById("methodSelect");
+
+    function generatePalette() {
+        const scale = 100 / Math.max(img.width, img.height);
+        canvasGen.width = img.width * scale;
+        canvasGen.height = img.height * scale;
+        applyBCS(ctxGen);
+        ctxGen.drawImage(img, 0, 0, canvasGen.width, canvasGen.height);
+        const data = ctxGen.getImageData(0, 0, canvasGen.width, canvasGen.height).data;
+        const pixels = [];
+        for (let i = 0; i < data.length; i += 4) {
+            if (data[i + 3] > 128) pixels.push([data[i], data[i + 1], data[i + 2]]);
+        }
+
+        const method = methodSelect.value;
+        let palette = [];
+
+        switch (method) {
+            case 'median':
+                palette = medianCut(pixels, 4);
+                break;
+            case 'kmeans':
+                palette = kMeans(pixels, 12, 5);
+                break;
+            case 'histogram':
+                palette = histogramTopColors(pixels, 12);
+                break;
+            case 'uniform':
+                palette = uniformQuantization(pixels, 3);
+                break;
+        }
+
+        return palette;
+    }
+
+    function getColorRange(pixels, ch) {
+        const vals = pixels.map(p => p[ch]);
+        return Math.max(...vals) - Math.min(...vals);
+    }
+
+    function medianCut(pixels, depth) {
+        if (depth === 0 || pixels.length === 0) {
+            const avg = [0, 0, 0];
+            for (let p of pixels) {
+                avg[0] += p[0];
+                avg[1] += p[1];
+                avg[2] += p[2];
+            }
+            return [[
+                Math.round(avg[0] / pixels.length),
+                Math.round(avg[1] / pixels.length),
+                Math.round(avg[2] / pixels.length)
+            ]];
+        }
+        const ranges = [0, 1, 2].map(i => getColorRange(pixels, i));
+        const ch = ranges.indexOf(Math.max(...ranges));
+        pixels.sort((a, b) => a[ch] - b[ch]);
+        const mid = Math.floor(pixels.length / 2);
+        return [
+            ...medianCut(pixels.slice(0, mid), depth - 1),
+            ...medianCut(pixels.slice(mid), depth - 1)
+        ];
+    }
+
+    function kMeans(pixels, k = 8, maxIters = 10) {
+        const centroids = pixels.slice(0, k);
+        for (let iter = 0; iter < maxIters; iter++) {
+            const clusters = Array.from({length: k}, () => []);
+            for (let p of pixels) {
+                let minDist = Infinity, best = 0;
+                for (let i = 0; i < k; i++) {
+                    const c = centroids[i];
+                    const dist = (p[0] - c[0]) ** 2 + (p[1] - c[1]) ** 2 + (p[2] - c[2]) ** 2;
+                    if (dist < minDist) {
+                        minDist = dist;
+                        best = i;
+                    }
+                }
+                clusters[best].push(p);
+            }
+            for (let i = 0; i < k; i++) {
+                if (clusters[i].length === 0) continue;
+                const avg = [0, 0, 0];
+                for (let p of clusters[i]) {
+                    avg[0] += p[0];
+                    avg[1] += p[1];
+                    avg[2] += p[2];
+                }
+                centroids[i] = avg.map(v => Math.round(v / clusters[i].length));
+            }
+        }
+        return centroids;
+    }
+
+    function histogramTopColors(pixels, n = 8) {
+        const map = {};
+        for (let p of pixels) {
+            const key = p.join(',');
+            map[key] = (map[key] || 0) + 1;
+        }
+        return Object.entries(map)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, n)
+            .map(([key]) => key.split(',').map(Number));
+    }
+
+    function uniformQuantization(pixels, bits = 3) {
+        const levels = 2 ** bits;
+        const step = 256 / levels;
+        const palette = new Set();
+        for (let p of pixels) {
+            const r = Math.floor(p[0] / step) * step + step / 2;
+            const g = Math.floor(p[1] / step) * step + step / 2;
+            const b = Math.floor(p[2] / step) * step + step / 2;
+            palette.add([Math.round(r), Math.round(g), Math.round(b)].join(','));
+            if (palette.size >= 12) break;
+        }
+        return [...palette].map(str => str.split(',').map(Number));
+    }
 </script>
 </body>
 </html>
